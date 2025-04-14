@@ -1,15 +1,17 @@
 import sys
 import time
 import numpy as np
-from ase.io import read, write
+from ase.io import read
 from quests.descriptor import get_descriptors
 from quests.entropy import delta_entropy, approx_delta_entropy
 
 num = int(sys.argv[1])
 
-structures = read("mptrj_without_subset.extxyz", index=":")
-dset_y = read("mptrj_subset_500.extxyz", index=":")
+structures = read("oc20/oc20_without_subset.extxyz", index=":")
+dset_y = read("oc20/oc20_subset.extxyz", index=":")
 print("done reading in structures")
+
+dataset_name = 'oc20'
 
 k, cutoff = 32, 5.0
 
@@ -19,18 +21,18 @@ if num == 0:
     t1 = time.time()
     print(f"y get descriptors took {t1-t0:.2f} seconds")
 
-    np.save('mptrj_subset_descriptors.npy', y)
-    print(f"Saved y descriptors to mptrj_subset_descriptors.npy")
+    np.save(f'{dataset_name}_subset_descriptors.npy', y)
+    print(f"Saved y descriptors to {dataset_name}_subset_descriptors.npy")
 
 t2 = time.time()
-if num == 3:
-    x = get_descriptors(structures[393769*3:], k=k, cutoff=cutoff)
+if num == 4:
+    x = get_descriptors(structures[400510*4:], k=k, cutoff=cutoff)
 else:
-    x = get_descriptors(structures[393769*num:393769*(num+1)], k=k, cutoff=cutoff)
+    x = get_descriptors(structures[400510*num:400510*(num+1)], k=k, cutoff=cutoff)
 t3 = time.time()
 print(f"x get descriptors took {(t3-t2) / 60 / 60:.3f} hours")
 
-fname = f"mptrj_without_subset_descriptors_{num}.npy"
+fname = f"{dataset_name}_without_subset_descriptors_{num}.npy"
 np.save(fname, x)
 print(f"Saved x descriptors to {fname}")
 
