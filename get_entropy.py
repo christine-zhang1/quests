@@ -2,7 +2,7 @@ import time
 import numpy as np
 from quests.entropy import delta_entropy, approx_delta_entropy
 
-dataset_name = "oc20"
+dataset_name = "mptrj"
 
 print("Loading 0th descriptor")
 x_desc_0 = np.load(f"{dataset_name}/{dataset_name}_without_subset_descriptors_0.npy")
@@ -16,13 +16,10 @@ x_desc_2 = np.load(f"{dataset_name}/{dataset_name}_without_subset_descriptors_2.
 print("Loading 3rd descriptor")
 x_desc_3 = np.load(f"{dataset_name}/{dataset_name}_without_subset_descriptors_3.npy")
 
-print("Loading 4th descriptor")
-x_desc_4 = np.load(f"{dataset_name}/{dataset_name}_without_subset_descriptors_4.npy")
-
 print("Loading y descriptor")
 y_desc = np.load(f"{dataset_name}/{dataset_name}_subset_descriptors.npy")
 
-x_desc = np.vstack((x_desc_0, x_desc_1, x_desc_2, x_desc_3, x_desc_4))
+x_desc = np.vstack((x_desc_0, x_desc_1, x_desc_2, x_desc_3))
 
 k, cutoff = 32, 5.0
 
@@ -34,8 +31,9 @@ dH = delta_entropy(y_desc, x_desc, h=0.015)
 t5 = time.time()
 print(f"dH took {(t5-t4) / 60 / 60:.3f} hours")
 
-np.save(f'{dataset_name}/{dataset_name}_subset_dH.npy', dH)
-print(f"Saved dH to {dataset_name}/{dataset_name}_subset_dH.npy")
+fname = f"{dataset_name}/{dataset_name}_subset_dH.npy"
+np.save(fname, dH)
+print(f"Saved dH to {fname}")
 
 # computes approximate dH (Y | X)
 # t4 = time.time()

@@ -7,11 +7,11 @@ from quests.entropy import delta_entropy, approx_delta_entropy
 
 num = int(sys.argv[1])
 
-structures = read("oc20/oc20_without_subset.extxyz", index=":")
-dset_y = read("oc20/oc20_subset.extxyz", index=":")
-print("done reading in structures")
+dataset_name = 'mptrj'
 
-dataset_name = 'oc20'
+structures = read(f"{dataset_name}/{dataset_name}_without_subset.extxyz", index=":")
+dset_y = read(f"{dataset_name}/{dataset_name}_subset.extxyz", index=":")
+print("done reading in structures")
 
 k, cutoff = 32, 5.0
 
@@ -21,18 +21,19 @@ if num == 0:
     t1 = time.time()
     print(f"y get descriptors took {t1-t0:.2f} seconds")
 
-    np.save(f'{dataset_name}_subset_descriptors.npy', y)
-    print(f"Saved y descriptors to {dataset_name}_subset_descriptors.npy")
+    y_fname = f"{dataset_name}/{dataset_name}_subset_descriptors.npy"
+    np.save(y_fname, y)
+    print(f"Saved y descriptors to {y_fname}")
 
 t2 = time.time()
-if num == 4:
-    x = get_descriptors(structures[400510*4:], k=k, cutoff=cutoff)
+if num == 3:
+    x = get_descriptors(structures[36355*3:], k=k, cutoff=cutoff)
 else:
-    x = get_descriptors(structures[400510*num:400510*(num+1)], k=k, cutoff=cutoff)
+    x = get_descriptors(structures[36355*num:36355*(num+1)], k=k, cutoff=cutoff)
 t3 = time.time()
 print(f"x get descriptors took {(t3-t2) / 60 / 60:.3f} hours")
 
-fname = f"{dataset_name}_without_subset_descriptors_{num}.npy"
+fname = f"{dataset_name}/{dataset_name}_without_subset_descriptors_{num}.npy"
 np.save(fname, x)
 print(f"Saved x descriptors to {fname}")
 
