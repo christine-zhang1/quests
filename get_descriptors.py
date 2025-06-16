@@ -5,6 +5,8 @@ from ase.io import read
 from quests.descriptor import get_descriptors
 from quests.entropy import delta_entropy, approx_delta_entropy
 
+# index for number of parts you want to split the dataset into when calculating descriptors. this helps with parallelization to make the descriptor calculation go faster
+# for example, if i wanted to split the dataset into 4 parts, i would pass in 0, 1, 2, 3
 num = int(sys.argv[1])
 
 dataset_name = 'mptrj'
@@ -27,8 +29,10 @@ if num == 0:
 
 t2 = time.time()
 if num == 3:
+    # get the rest of the structures
     x = get_descriptors(structures[36355*3:], k=k, cutoff=cutoff)
 else:
+    # get the num-th chunk of the structures
     x = get_descriptors(structures[36355*num:36355*(num+1)], k=k, cutoff=cutoff)
 t3 = time.time()
 print(f"x get descriptors took {(t3-t2) / 60 / 60:.3f} hours")
